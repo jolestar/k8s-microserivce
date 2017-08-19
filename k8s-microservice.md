@@ -3,7 +3,7 @@
 <!-- footer: @jolestar -->
 
 
-# Kubernetes 微服务支持特性详解
+# Kubernetes & MicroService
 #### 王渊命 @jolestar 青云容器平台负责人
 
 ![bg](images/bg.png) 
@@ -23,9 +23,8 @@
 
 - 服务发现 服务目录 服务列表 配置中心
 - 服务生命周期 变更，升级
-- 依赖关系
-- 链路跟踪 限流 降级 熔断
 - 服务依赖关系
+- 链路跟踪 限流 降级 熔断
 - 访问控制
 
 
@@ -89,6 +88,14 @@ path: /tmp/mypod
 ![pod](images/pod.png)
 
 ---
+# Sidecar 模式
+
+- 方便更细粒度的拆解服务，降低运维管理成本
+- 提供一种非侵入的方式来扩展服务
+
+![bg](images/bg.png) 
+
+---
 # 服务发现
 
 ## Service , ClusterIP 以及 DNS
@@ -103,7 +110,7 @@ path: /tmp/mypod
 apiVersion: v1
 kind: Service
 metadata:
-  name: my-service
+  name: myservice
 spec:
   ports:
   - port: 80
@@ -112,6 +119,9 @@ spec:
   selector:
     app: my-app
   clusterIP: 10.96.0.11
+```
+```console
+curl http://myservice
 ```
 
 ![bg](images/bg.png) 
@@ -123,6 +133,10 @@ spec:
 
 ---
 # Service , ClusterIP 以及 DNS
+
+- kube-dns
+- dnsmasq
+- dns-sidecar
 
 ```console
 cat /etc/resolv.con
@@ -197,7 +211,7 @@ kubectl autoscale deployment php-apache --cpu-percent=50 --min=1 --max=10
 # 微服务集大成之 istio
 
 - 智能路由以及负载均衡
-- 流量加密、服务间认证，以及强身份声明
+- 流量加密、服务间认证
 - 跨语言以及平台
 - 全范围（Fleet-wide）策略执行
 - 深度监控和报告 (Prometheus & Grafana, Zipkin)
@@ -222,6 +236,8 @@ kubectl autoscale deployment php-apache --cpu-percent=50 --min=1 --max=10
 - Security
 - Policy Enforcement
 
+![bg](images/bg.png) 
+
 ---
 # istio 架构 -- Enject 魔法
 
@@ -229,7 +245,17 @@ kubectl autoscale deployment php-apache --cpu-percent=50 --min=1 --max=10
 
 ---
 
+# istio 服务依赖关系
+
+![BookInfo Service Graph](images/istio-servicegraph.png)
+BookInfo Service Graph
+
+
+---
 # 总结
+
+- 架构问题，一层解决不了的时候就再抽象一层
+- Kubernetes 提供了一种便于在服务之间增加控制层的能力
 
 ---
 # 一个硬广告
